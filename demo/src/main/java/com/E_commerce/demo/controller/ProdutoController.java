@@ -3,6 +3,7 @@ package com.E_commerce.demo.controller;
 import com.E_commerce.demo.dto.ProdutoRequest;
 import com.E_commerce.demo.entity.Produto;
 import com.E_commerce.demo.service.ProdutoService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public Produto salvar(@RequestBody ProdutoRequest request) {
+    public Produto salvar(@Valid @RequestBody ProdutoRequest request) {
         return service.salvar(request);
     }
 }

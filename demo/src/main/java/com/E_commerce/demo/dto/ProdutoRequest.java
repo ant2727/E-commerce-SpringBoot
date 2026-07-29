@@ -1,16 +1,27 @@
 package com.E_commerce.demo.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 public class ProdutoRequest {
 
-
+        @NotBlank
         private String nome;
+
+        @NotNull
+        @Positive
         private BigDecimal preco;
+
+        @NotNull
+        @Positive
         private Integer estoque;
 
         public ProdutoRequest() {
         }
+
 
         public String getNome() {
             return nome;
