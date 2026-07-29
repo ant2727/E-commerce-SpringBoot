@@ -2,9 +2,7 @@ package com.E_commerce.demo.Controller;
 
 import com.E_commerce.demo.Entity.Produto;
 import com.E_commerce.demo.Service.ProdutoService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +20,10 @@ public class ProdutoController {
     @GetMapping
     public List<Produto> listarTodos() {
         return service.listarTodos();
+    }
+
+    @PostMapping
+    public Produto salvar(@RequestBody Produto produto) {
+        return service.salvar(produto);
     }
 }
