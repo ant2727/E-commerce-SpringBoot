@@ -1,7 +1,7 @@
-package com.E_commerce.demo.Service;
+package com.E_commerce.demo.service;
 
-import com.E_commerce.demo.Entity.Produto;
-import com.E_commerce.demo.Repository.ProdutoRepository;
+import com.E_commerce.demo.entity.Produto;
+import com.E_commerce.demo.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
