@@ -1,5 +1,6 @@
 package com.E_commerce.demo.controller;
 
+import com.E_commerce.demo.dto.ProdutoRequest;
 import com.E_commerce.demo.entity.Produto;
 import com.E_commerce.demo.service.ProdutoService;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public Produto salvar(@RequestBody Produto produto) {
-        return service.salvar(produto);
+    public Produto salvar(@RequestBody ProdutoRequest request) {
+        return service.salvar(request);
     }
 }
