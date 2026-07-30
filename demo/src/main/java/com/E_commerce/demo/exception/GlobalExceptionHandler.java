@@ -3,6 +3,7 @@ package com.E_commerce.demo.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
@@ -25,6 +26,17 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.value(),
                 "Erro de validação",
                 erros
+        );
+    }
+
+    @ExceptionHandler(ProdutoNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError tratarProdutoNaoEncontrado(ProdutoNaoEncontradoException ex) {
+
+        return new ApiError(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                null
         );
     }
 }

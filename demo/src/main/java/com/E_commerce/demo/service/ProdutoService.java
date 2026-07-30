@@ -3,6 +3,7 @@ package com.E_commerce.demo.service;
 import com.E_commerce.demo.dto.ProdutoRequest;
 import com.E_commerce.demo.dto.ProdutoResponse;
 import com.E_commerce.demo.entity.Produto;
+import com.E_commerce.demo.exception.ProdutoNaoEncontradoException;
 import com.E_commerce.demo.mapper.ProdutoMapper;
 import com.E_commerce.demo.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class ProdutoService {
     public ProdutoResponse buscarPorId(Long id) {
 
         Produto produto = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
 
         return mapper.toResponse(produto);
 
