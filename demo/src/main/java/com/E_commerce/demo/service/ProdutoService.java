@@ -1,32 +1,38 @@
 package com.E_commerce.demo.service;
 
 import com.E_commerce.demo.dto.ProdutoRequest;
+import com.E_commerce.demo.dto.ProdutoResponse;
 import com.E_commerce.demo.entity.Produto;
+import com.E_commerce.demo.mapper.ProdutoMapper;
 import com.E_commerce.demo.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 public class ProdutoService {
 
-        private final ProdutoRepository repository;
+    private final ProdutoRepository repository;
+    private final ProdutoMapper mapper;
 
-        public ProdutoService(ProdutoRepository repository) {
-            this.repository = repository;
-        }
+    public ProdutoService(ProdutoRepository repository, ProdutoMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
-        public List<Produto> listarTodos() {
-            return repository.findAll();
-        }
+    public List<ProdutoResponse> listarTodos() {
 
-    public Produto salvar(ProdutoRequest request) {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
 
-        Produto produto = new Produto();
+    public ProdutoResponse salvar(ProdutoRequest request) {
 
-        produto.setNome(request.getNome());
-        produto.setPreco(request.getPreco());
-        produto.setEstoque(request.getEstoque());
+        Produto produto = mapper.toEntity(request);
 
-        return repository.save(produto);
+        Produto salvo = repository.save(produto);
+
+        return mapper.toResponse(salvo);
     }
 
 }
