@@ -57,4 +57,13 @@ public class ProdutoService {
         return mapper.toResponse(atualizado);
 
     }
+
+    public void excluir(Long id) {
+
+        Produto produto = repository.findById(id)
+                .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
+
+        repository.delete(produto);
+
+    }
 }

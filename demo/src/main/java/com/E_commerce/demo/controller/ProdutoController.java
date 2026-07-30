@@ -5,6 +5,7 @@ import com.E_commerce.demo.dto.ProdutoResponse;
 import com.E_commerce.demo.entity.Produto;
 import com.E_commerce.demo.service.ProdutoService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,5 +43,11 @@ public class ProdutoController {
 
         return service.atualizar(id, request);
 
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long id) {
+        service.excluir(id);
     }
 }
