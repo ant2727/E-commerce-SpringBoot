@@ -19,6 +19,8 @@ public class ProdutoRequest {
         @Positive
         private Integer estoque;
 
+        private Long categoriaId;
+
         public ProdutoRequest() {
         }
 
