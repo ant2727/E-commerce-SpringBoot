@@ -29,4 +29,9 @@ public class ProdutoController {
     public ProdutoResponse salvar(@Valid @RequestBody ProdutoRequest request) {
         return service.salvar(request);
     }
+
+    @GetMapping("/{id}")
+    public ProdutoResponse buscarPorId(@PathVariable Long id) {
+        return service.buscarPorId(id);
+    }
 }

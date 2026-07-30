@@ -35,4 +35,12 @@ public class ProdutoService {
         return mapper.toResponse(salvo);
     }
 
+    public ProdutoResponse buscarPorId(Long id) {
+
+        Produto produto = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        return mapper.toResponse(produto);
+
+    }
 }
