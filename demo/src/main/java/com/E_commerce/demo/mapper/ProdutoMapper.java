@@ -31,4 +31,12 @@ public class ProdutoMapper {
 
     }
 
+    public void atualizarEntity(Produto produto, ProdutoRequest request) {
+
+        produto.setNome(request.getNome());
+        produto.setPreco(request.getPreco());
+        produto.setEstoque(request.getEstoque());
+
+    }
+
 }

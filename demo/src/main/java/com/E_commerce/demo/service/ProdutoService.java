@@ -44,4 +44,17 @@ public class ProdutoService {
         return mapper.toResponse(produto);
 
     }
+
+    public ProdutoResponse atualizar(Long id, ProdutoRequest request) {
+
+        Produto produto = repository.findById(id)
+                .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
+
+        mapper.atualizarEntity(produto, request);
+
+        Produto atualizado = repository.save(produto);
+
+        return mapper.toResponse(atualizado);
+
+    }
 }
