@@ -12,6 +12,8 @@ import com.E_commerce.demo.repository.ProdutoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.List;
 @Service
 public class ProdutoService {
@@ -81,5 +83,25 @@ public class ProdutoService {
                 .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
 
         repository.delete(produto);
+    }
+
+    public List<ProdutoResponse> buscarPorNome(String nome) {
+
+        return repository.findByNomeContainingIgnoreCase(nome)
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+
+    }
+
+    public List<ProdutoResponse> buscarPorPreco(
+            BigDecimal minimo,
+            BigDecimal maximo) {
+
+        return repository.findByPrecoBetween(minimo, maximo)
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+
     }
 }

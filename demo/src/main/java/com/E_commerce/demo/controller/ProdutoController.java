@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -52,5 +53,22 @@ public class ProdutoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long id) {
         service.excluir(id);
+    }
+
+    @GetMapping("/buscar")
+    public List<ProdutoResponse> buscarPorNome(
+            @RequestParam String nome) {
+
+        return service.buscarPorNome(nome);
+
+    }
+
+    @GetMapping("/buscar/preco")
+    public List<ProdutoResponse> buscarPorPreco(
+            @RequestParam BigDecimal min,
+            @RequestParam BigDecimal max) {
+
+        return service.buscarPorPreco(min, max);
+
     }
 }
