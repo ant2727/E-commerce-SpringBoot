@@ -15,6 +15,16 @@ public class FileStorageService {
 
     public String salvar(MultipartFile arquivo) throws IOException {
 
+        if (arquivo.isEmpty()) {
+            throw new IllegalArgumentException("Arquivo vazio.");
+        }
+
+        String tipo = arquivo.getContentType();
+
+        if (tipo == null || !tipo.startsWith("image/")) {
+            throw new IllegalArgumentException("O arquivo deve ser uma imagem.");
+        }
+
         Path pasta = Paths.get(DIRETORIO);
 
         if (!Files.exists(pasta)) {

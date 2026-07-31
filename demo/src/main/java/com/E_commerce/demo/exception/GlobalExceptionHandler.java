@@ -52,4 +52,17 @@ public class GlobalExceptionHandler {
         );
 
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError tratarIllegalArgumentException(
+            IllegalArgumentException ex) {
+
+        return new ApiError(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                null
+        );
+
+    }
 }
