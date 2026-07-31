@@ -9,6 +9,8 @@ import com.E_commerce.demo.exception.ProdutoNaoEncontradoException;
 import com.E_commerce.demo.mapper.ProdutoMapper;
 import com.E_commerce.demo.repository.CategoriaRepository;
 import com.E_commerce.demo.repository.ProdutoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
@@ -40,12 +42,11 @@ public class ProdutoService {
         return mapper.toResponse(salvo);
     }
 
-    public List<ProdutoResponse> listarTodos() {
+    public Page<ProdutoResponse> listarTodos(Pageable pageable) {
 
-        return repository.findAll()
-                .stream()
-                .map(mapper::toResponse)
-                .toList();
+        return repository.findAll(pageable)
+                .map(mapper::toResponse);
+
     }
 
     public ProdutoResponse buscarPorId(Long id) {

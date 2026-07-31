@@ -5,6 +5,8 @@ import com.E_commerce.demo.dto.ProdutoResponse;
 import com.E_commerce.demo.entity.Produto;
 import com.E_commerce.demo.service.ProdutoService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +24,11 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public List<ProdutoResponse> listarTodos() {
-        return service.listarTodos();
-    }
+    public Page<ProdutoResponse> listarTodos(Pageable pageable) {
 
+        return service.listarTodos(pageable);
+
+    }
     @PostMapping
     public ProdutoResponse salvar(@Valid @RequestBody ProdutoRequest request) {
         return service.salvar(request);
