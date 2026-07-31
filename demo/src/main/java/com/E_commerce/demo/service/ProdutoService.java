@@ -4,6 +4,7 @@ import com.E_commerce.demo.dto.ProdutoRequest;
 import com.E_commerce.demo.dto.ProdutoResponse;
 import com.E_commerce.demo.entity.Categoria;
 import com.E_commerce.demo.entity.Produto;
+import com.E_commerce.demo.exception.CategoriaNaoEncontradoException;
 import com.E_commerce.demo.exception.ProdutoNaoEncontradoException;
 import com.E_commerce.demo.mapper.ProdutoMapper;
 import com.E_commerce.demo.repository.CategoriaRepository;
@@ -30,7 +31,7 @@ public class ProdutoService {
     public ProdutoResponse salvar(ProdutoRequest request) {
 
         Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+                .orElseThrow(() -> new CategoriaNaoEncontradoException(request.getCategoriaId()));
 
         Produto produto = mapper.toEntity(request, categoria);
 
@@ -61,7 +62,7 @@ public class ProdutoService {
                 .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
 
         Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+                .orElseThrow(() -> new CategoriaNaoEncontradoException(request.getCategoriaId()));
 
         produto.setNome(request.getNome());
         produto.setPreco(request.getPreco());
