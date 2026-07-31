@@ -2,9 +2,11 @@ package com.E_commerce.demo.service;
 
 import com.E_commerce.demo.dto.ProdutoRequest;
 import com.E_commerce.demo.dto.ProdutoResponse;
+import com.E_commerce.demo.entity.Categoria;
 import com.E_commerce.demo.entity.Produto;
 import com.E_commerce.demo.exception.ProdutoNaoEncontradoException;
 import com.E_commerce.demo.mapper.ProdutoMapper;
+import com.E_commerce.demo.repository.CategoriaRepository;
 import com.E_commerce.demo.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -12,11 +14,29 @@ import java.util.List;
 public class ProdutoService {
 
     private final ProdutoRepository repository;
+    private final CategoriaRepository categoriaRepository;
     private final ProdutoMapper mapper;
 
-    public ProdutoService(ProdutoRepository repository, ProdutoMapper mapper) {
+    public ProdutoService(
+            ProdutoRepository repository,
+            CategoriaRepository categoriaRepository,
+            ProdutoMapper mapper) {
+
         this.repository = repository;
+        this.categoriaRepository = categoriaRepository;
         this.mapper = mapper;
+    }
+
+    public ProdutoResponse salvar(ProdutoRequest request) {
+
+        Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+
+        Produto produto = mapper.toEntity(request, categoria);
+
+        Produto salvo = repository.save(produto);
+
+        return mapper.toResponse(salvo);
     }
 
     public List<ProdutoResponse> listarTodos() {
@@ -27,22 +47,12 @@ public class ProdutoService {
                 .toList();
     }
 
-    public ProdutoResponse salvar(ProdutoRequest request) {
-
-        Produto produto = mapper.toEntity(request);
-
-        Produto salvo = repository.save(produto);
-
-        return mapper.toResponse(salvo);
-    }
-
     public ProdutoResponse buscarPorId(Long id) {
 
         Produto produto = repository.findById(id)
                 .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
 
         return mapper.toResponse(produto);
-
     }
 
     public ProdutoResponse atualizar(Long id, ProdutoRequest request) {
@@ -50,12 +60,17 @@ public class ProdutoService {
         Produto produto = repository.findById(id)
                 .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
 
-        mapper.atualizarEntity(produto, request);
+        Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+
+        produto.setNome(request.getNome());
+        produto.setPreco(request.getPreco());
+        produto.setEstoque(request.getEstoque());
+        produto.setCategoria(categoria);
 
         Produto atualizado = repository.save(produto);
 
         return mapper.toResponse(atualizado);
-
     }
 
     public void excluir(Long id) {
@@ -64,6 +79,5 @@ public class ProdutoService {
                 .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
 
         repository.delete(produto);
-
     }
 }

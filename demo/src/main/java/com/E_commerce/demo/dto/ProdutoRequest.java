@@ -1,5 +1,6 @@
 package com.E_commerce.demo.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -8,44 +9,51 @@ import java.math.BigDecimal;
 
 public class ProdutoRequest {
 
-        @NotBlank
-        private String nome;
+    @NotBlank
+    private String nome;
 
-        @NotNull
-        @Positive
-        private BigDecimal preco;
+    @NotNull
+    @DecimalMin("0.01")
+    private BigDecimal preco;
 
-        @NotNull
-        @Positive
-        private Integer estoque;
+    @NotNull
+    private Integer estoque;
 
-        private Long categoriaId;
+    @NotNull
+    private Long categoriaId;
 
-        public ProdutoRequest() {
-        }
+    public ProdutoRequest() {
+    }
 
+    public String getNome() {
+        return nome;
+    }
 
-        public String getNome() {
-            return nome;
-        }
+    public BigDecimal getPreco() {
+        return preco;
+    }
 
-        public void setNome(String nome) {
-            this.nome = nome;
-        }
+    public Integer getEstoque() {
+        return estoque;
+    }
 
-        public BigDecimal getPreco() {
-            return preco;
-        }
+    public Long getCategoriaId() {
+        return categoriaId;
+    }
 
-        public void setPreco(BigDecimal preco) {
-            this.preco = preco;
-        }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-        public Integer getEstoque() {
-            return estoque;
-        }
+    public void setPreco(BigDecimal preco) {
+        this.preco = preco;
+    }
 
-        public void setEstoque(Integer estoque) {
-            this.estoque = estoque;
-        }
+    public void setEstoque(Integer estoque) {
+        this.estoque = estoque;
+    }
+
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
+    }
 }

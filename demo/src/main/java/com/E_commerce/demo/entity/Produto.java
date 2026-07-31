@@ -17,7 +17,6 @@ public class Produto {
 
     private Integer estoque;
 
-    private Long categoriaId;
 
     public Produto() {
     }
