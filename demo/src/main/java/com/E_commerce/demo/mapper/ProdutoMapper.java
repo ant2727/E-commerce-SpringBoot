@@ -30,6 +30,7 @@ public class ProdutoMapper {
         response.setNome(produto.getNome());
         response.setPreco(produto.getPreco());
         response.setEstoque(produto.getEstoque());
+        response.setImagem(produto.getImagem());
 
         return response;
     }

@@ -21,6 +21,14 @@ public class Produto {
     public Produto() {
     }
 
+    @Column(name = "imagem")
+    private String imagem;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
+
+
     public Long getId() {
         return id;
     }
@@ -53,15 +61,19 @@ public class Produto {
         this.estoque = estoque;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
-
     public Categoria getCategoria() {
         return categoria;
     }
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    public String getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
     }
 }

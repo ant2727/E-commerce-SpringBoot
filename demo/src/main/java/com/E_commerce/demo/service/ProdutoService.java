@@ -12,7 +12,9 @@ import com.E_commerce.demo.repository.ProdutoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 @Service
@@ -21,15 +23,18 @@ public class ProdutoService {
     private final ProdutoRepository repository;
     private final CategoriaRepository categoriaRepository;
     private final ProdutoMapper mapper;
+    private final FileStorageService fileStorageService;
 
     public ProdutoService(
             ProdutoRepository repository,
             CategoriaRepository categoriaRepository,
-            ProdutoMapper mapper) {
+            ProdutoMapper mapper,
+            FileStorageService fileStorageService) {
 
         this.repository = repository;
         this.categoriaRepository = categoriaRepository;
         this.mapper = mapper;
+        this.fileStorageService = fileStorageService;
     }
 
     public ProdutoResponse salvar(ProdutoRequest request) {
@@ -103,5 +108,22 @@ public class ProdutoService {
                 .map(mapper::toResponse)
                 .toList();
 
+    }
+
+    public ProdutoResponse uploadImagem(
+            Long id,
+            MultipartFile arquivo) throws IOException {
+
+        Produto produto = repository.findById(id)
+                .orElseThrow(() ->
+                        new ProdutoNaoEncontradoException(id));
+
+        String nomeArquivo = fileStorageService.salvar(arquivo);
+
+        produto.setImagem(nomeArquivo);
+
+        Produto atualizado = repository.save(produto);
+
+        return mapper.toResponse(atualizado);
     }
 }

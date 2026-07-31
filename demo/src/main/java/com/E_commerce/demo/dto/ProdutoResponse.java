@@ -8,6 +8,7 @@ public class ProdutoResponse {
     private String nome;
     private BigDecimal preco;
     private Integer estoque;
+    private String imagem;
 
     public ProdutoResponse() {
     }
@@ -49,5 +50,13 @@ public class ProdutoResponse {
 
     public void setEstoque(Integer estoque) {
         this.estoque = estoque;
+    }
+
+    public String getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
     }
 }
