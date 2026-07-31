@@ -53,7 +53,7 @@ public class Produto {
         this.estoque = estoque;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 

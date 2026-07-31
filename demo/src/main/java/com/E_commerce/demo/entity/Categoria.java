@@ -15,7 +15,11 @@ public class Categoria {
 
     private String nome;
 
-    @OneToMany(mappedBy = "categoria")
+    @OneToMany(
+            mappedBy = "categoria",
+            fetch = FetchType.LAZY
+    )
+
     private List<Produto> produtos = new ArrayList<>();
 
     public Categoria() {
