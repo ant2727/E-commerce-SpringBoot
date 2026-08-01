@@ -89,4 +89,16 @@ public class GlobalExceptionHandler {
                 null
         );
 }
+
+    @ExceptionHandler(ItemCarrinhoNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError tratarItemCarrinhoNaoEncontrado(
+            ItemCarrinhoNaoEncontradoException ex) {
+
+        return new ApiError(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                null
+        );
+    }
 }

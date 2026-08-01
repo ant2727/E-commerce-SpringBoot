@@ -7,6 +7,7 @@ import com.E_commerce.demo.entity.Cliente;
 import com.E_commerce.demo.entity.ItemCarrinho;
 import com.E_commerce.demo.entity.Produto;
 import com.E_commerce.demo.exception.ClienteNaoEncontradoException;
+import com.E_commerce.demo.exception.ItemCarrinhoNaoEncontradoException;
 import com.E_commerce.demo.exception.ProdutoNaoEncontradoException;
 import com.E_commerce.demo.exception.ProdutoSemEstoqueException;
 import com.E_commerce.demo.repository.CarrinhoRepository;
@@ -141,5 +142,23 @@ public class CarrinhoService {
         response.setTotal(total);
 
         return response;
+    }
+
+    @Transactional
+    public void removerProduto(
+            Long clienteId,
+            Long produtoId) {
+
+        Carrinho carrinho = buscarOuCriarCarrinho(clienteId);
+
+        ItemCarrinho item = itemRepository
+                .findByCarrinhoIdAndProdutoId(
+                        carrinho.getId(),
+                        produtoId
+                )
+                .orElseThrow(() ->
+                        new ItemCarrinhoNaoEncontradoException(produtoId));
+
+        itemRepository.delete(item);
     }
 }
