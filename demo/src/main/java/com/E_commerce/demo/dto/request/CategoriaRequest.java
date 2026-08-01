@@ -1,20 +1,15 @@
 package com.E_commerce.demo.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class CategoriaRequest {
 
-    @NotBlank
+    @NotBlank(message = "O nome é obrigatório.")
     private String nome;
-
-    public CategoriaRequest() {
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 }

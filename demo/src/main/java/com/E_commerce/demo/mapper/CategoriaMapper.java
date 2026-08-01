@@ -7,25 +7,28 @@ import com.E_commerce.demo.entity.Categoria;
 import com.E_commerce.demo.entity.Produto;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
 @Component
 public class CategoriaMapper {
 
     public Categoria toEntity(CategoriaRequest request) {
-
         Categoria categoria = new Categoria();
         categoria.setNome(request.getNome());
-
         return categoria;
     }
 
     public CategoriaResponse toResponse(Categoria categoria) {
-
         CategoriaResponse response = new CategoriaResponse();
-
         response.setId(categoria.getId());
         response.setNome(categoria.getNome());
+        response.setProdutos(Collections.emptyList());
+        return response;
+    }
+
+    public CategoriaResponse toResponseComProdutos(Categoria categoria) {
+        CategoriaResponse response = toResponse(categoria);
 
         List<ProdutoResumoResponse> produtos = categoria.getProdutos()
                 .stream()
@@ -33,18 +36,13 @@ public class CategoriaMapper {
                 .toList();
 
         response.setProdutos(produtos);
-
         return response;
     }
 
     private ProdutoResumoResponse toProdutoResumo(Produto produto) {
-
         ProdutoResumoResponse response = new ProdutoResumoResponse();
-
         response.setId(produto.getId());
         response.setNome(produto.getNome());
-
         return response;
     }
 }
-

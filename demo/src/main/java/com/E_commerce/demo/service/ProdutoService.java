@@ -9,15 +9,19 @@ import com.E_commerce.demo.exception.ProdutoNaoEncontradoException;
 import com.E_commerce.demo.mapper.ProdutoMapper;
 import com.E_commerce.demo.repository.CategoriaRepository;
 import com.E_commerce.demo.repository.ProdutoRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class ProdutoService {
 
     private final ProdutoRepository repository;
@@ -25,47 +29,29 @@ public class ProdutoService {
     private final ProdutoMapper mapper;
     private final FileStorageService fileStorageService;
 
-    public ProdutoService(
-            ProdutoRepository repository,
-            CategoriaRepository categoriaRepository,
-            ProdutoMapper mapper,
-            FileStorageService fileStorageService) {
-
-        this.repository = repository;
-        this.categoriaRepository = categoriaRepository;
-        this.mapper = mapper;
-        this.fileStorageService = fileStorageService;
-    }
-
+    @Transactional
     public ProdutoResponse salvar(ProdutoRequest request) {
-
         Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
                 .orElseThrow(() -> new CategoriaNaoEncontradoException(request.getCategoriaId()));
 
         Produto produto = mapper.toEntity(request, categoria);
-
-        Produto salvo = repository.save(produto);
-
-        return mapper.toResponse(salvo);
+        return mapper.toResponse(repository.save(produto));
     }
 
+    @Transactional(readOnly = true)
     public Page<ProdutoResponse> listarTodos(Pageable pageable) {
-
-        return repository.findAll(pageable)
-                .map(mapper::toResponse);
-
+        return repository.findAll(pageable).map(mapper::toResponse);
     }
 
+    @Transactional(readOnly = true)
     public ProdutoResponse buscarPorId(Long id) {
-
         Produto produto = repository.findById(id)
                 .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
-
         return mapper.toResponse(produto);
     }
 
+    @Transactional
     public ProdutoResponse atualizar(Long id, ProdutoRequest request) {
-
         Produto produto = repository.findById(id)
                 .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
 
@@ -77,53 +63,39 @@ public class ProdutoService {
         produto.setEstoque(request.getEstoque());
         produto.setCategoria(categoria);
 
-        Produto atualizado = repository.save(produto);
-
-        return mapper.toResponse(atualizado);
+        return mapper.toResponse(repository.save(produto));
     }
 
+    @Transactional
     public void excluir(Long id) {
-
         Produto produto = repository.findById(id)
                 .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
-
         repository.delete(produto);
     }
 
+    @Transactional(readOnly = true)
     public List<ProdutoResponse> buscarPorNome(String nome) {
-
         return repository.findByNomeContainingIgnoreCase(nome)
                 .stream()
                 .map(mapper::toResponse)
                 .toList();
-
     }
 
-    public List<ProdutoResponse> buscarPorPreco(
-            BigDecimal minimo,
-            BigDecimal maximo) {
-
+    @Transactional(readOnly = true)
+    public List<ProdutoResponse> buscarPorPreco(BigDecimal minimo, BigDecimal maximo) {
         return repository.findByPrecoBetween(minimo, maximo)
                 .stream()
                 .map(mapper::toResponse)
                 .toList();
-
     }
 
-    public ProdutoResponse uploadImagem(
-            Long id,
-            MultipartFile arquivo) throws IOException {
-
+    @Transactional
+    public ProdutoResponse uploadImagem(Long id, MultipartFile arquivo) throws IOException {
         Produto produto = repository.findById(id)
-                .orElseThrow(() ->
-                        new ProdutoNaoEncontradoException(id));
+                .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
 
         String nomeArquivo = fileStorageService.salvar(arquivo);
-
         produto.setImagem(nomeArquivo);
-
-        Produto atualizado = repository.save(produto);
-
-        return mapper.toResponse(atualizado);
+        return mapper.toResponse(repository.save(produto));
     }
 }

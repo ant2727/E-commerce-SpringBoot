@@ -20,7 +20,7 @@ public class Carrinho {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "cliente_id", unique = true, nullable = false)
     private Cliente cliente;
 
     @Builder.Default
