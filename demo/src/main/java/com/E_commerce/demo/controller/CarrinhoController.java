@@ -2,6 +2,7 @@ package com.E_commerce.demo.controller;
 
 
 import com.E_commerce.demo.dto.request.AdicionarItemRequest;
+import com.E_commerce.demo.dto.response.CarrinhoResponse;
 import com.E_commerce.demo.service.CarrinhoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,4 +29,12 @@ public class CarrinhoController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{clienteId}")
+    public ResponseEntity<CarrinhoResponse> listarCarrinho(
+            @PathVariable Long clienteId) {
+
+        return ResponseEntity.ok(
+                service.listarCarrinho(clienteId)
+        );
+    }
 }

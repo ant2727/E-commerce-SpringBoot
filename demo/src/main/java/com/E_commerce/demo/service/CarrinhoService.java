@@ -1,5 +1,7 @@
 package com.E_commerce.demo.service;
 
+import com.E_commerce.demo.dto.response.CarrinhoResponse;
+import com.E_commerce.demo.dto.response.ItemCarrinhoResponse;
 import com.E_commerce.demo.entity.Carrinho;
 import com.E_commerce.demo.entity.Cliente;
 import com.E_commerce.demo.entity.ItemCarrinho;
@@ -15,6 +17,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -95,5 +99,47 @@ public class CarrinhoService {
         itemRepository.save(novoItem);
 
 
+    }
+
+    public CarrinhoResponse listarCarrinho(Long clienteId) {
+
+        Carrinho carrinho = buscarOuCriarCarrinho(clienteId);
+
+        CarrinhoResponse response = new CarrinhoResponse();
+
+        response.setId(carrinho.getId());
+        response.setClienteId(clienteId);
+
+        List<ItemCarrinhoResponse> itens = carrinho.getItens()
+                .stream()
+                .map(item -> {
+
+                    ItemCarrinhoResponse dto = new ItemCarrinhoResponse();
+
+                    dto.setProdutoId(item.getProduto().getId());
+                    dto.setNomeProduto(item.getProduto().getNome());
+                    dto.setQuantidade(item.getQuantidade());
+                    dto.setPrecoUnitario(item.getPrecoUnitario());
+
+                    dto.setSubtotal(
+                            item.getPrecoUnitario()
+                                    .multiply(
+                                            BigDecimal.valueOf(item.getQuantidade())
+                                    )
+                    );
+
+                    return dto;
+
+                }).toList();
+
+        response.setItens(itens);
+
+        BigDecimal total = itens.stream()
+                .map(ItemCarrinhoResponse::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        response.setTotal(total);
+
+        return response;
     }
 }
