@@ -161,4 +161,30 @@ public class CarrinhoService {
 
         itemRepository.delete(item);
     }
+    @Transactional
+    public void atualizarQuantidade(
+            Long clienteId,
+            Long produtoId,
+            Integer quantidade) {
+
+        Carrinho carrinho = buscarOuCriarCarrinho(clienteId);
+
+        ItemCarrinho item = itemRepository
+                .findByCarrinhoIdAndProdutoId(
+                        carrinho.getId(),
+                        produtoId
+                )
+                .orElseThrow(() ->
+                        new ItemCarrinhoNaoEncontradoException(produtoId));
+
+        Produto produto = item.getProduto();
+
+        if (produto.getEstoque() < quantidade) {
+            throw new ProdutoSemEstoqueException(produtoId);
+        }
+
+        item.atualizarQuantidade(quantidade);
+
+        itemRepository.save(item);
+    }
 }

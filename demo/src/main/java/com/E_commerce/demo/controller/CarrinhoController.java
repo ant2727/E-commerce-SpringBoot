@@ -2,6 +2,7 @@ package com.E_commerce.demo.controller;
 
 
 import com.E_commerce.demo.dto.request.AdicionarItemRequest;
+import com.E_commerce.demo.dto.request.AtualizarQuantidadeRequest;
 import com.E_commerce.demo.dto.response.CarrinhoResponse;
 import com.E_commerce.demo.service.CarrinhoService;
 import jakarta.validation.Valid;
@@ -36,5 +37,24 @@ public class CarrinhoController {
         return ResponseEntity.ok(
                 service.listarCarrinho(clienteId)
         );
+    }
+
+    @PutMapping("/{clienteId}/produto/{produtoId}")
+    public ResponseEntity<Void> atualizarQuantidade(
+
+            @PathVariable Long clienteId,
+
+            @PathVariable Long produtoId,
+
+            @Valid
+            @RequestBody AtualizarQuantidadeRequest request) {
+
+        service.atualizarQuantidade(
+                clienteId,
+                produtoId,
+                request.getQuantidade()
+        );
+
+        return ResponseEntity.noContent().build();
     }
 }

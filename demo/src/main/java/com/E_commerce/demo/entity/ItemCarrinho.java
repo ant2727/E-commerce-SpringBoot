@@ -35,4 +35,8 @@ public class ItemCarrinho {
     public void adicionarQuantidade(Integer quantidade) {
         this.quantidade += quantidade;
     }
+
+    public void atualizarQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
 }
