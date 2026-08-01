@@ -1,11 +1,17 @@
 package com.E_commerce.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "item_carrinho")
+@Table(name = "itens_carrinho")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ItemCarrinho {
 
     @Id
@@ -14,56 +20,14 @@ public class ItemCarrinho {
 
     private Integer quantidade;
 
-    private BigDecimal preco;
+    private BigDecimal precoUnitario;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "produto_id")
     private Produto produto;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "carrinho_id")
     private Carrinho carrinho;
 
-    public ItemCarrinho() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public BigDecimal getPreco() {
-        return preco;
-    }
-
-    public Produto getProduto() {
-        return produto;
-    }
-
-    public Carrinho getCarrinho() {
-        return carrinho;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public void setPreco(BigDecimal preco) {
-        this.preco = preco;
-    }
-
-    public void setProduto(Produto produto) {
-        this.produto = produto;
-    }
-
-    public void setCarrinho(Carrinho carrinho) {
-        this.carrinho = carrinho;
-    }
 }

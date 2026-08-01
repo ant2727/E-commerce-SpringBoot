@@ -1,7 +1,7 @@
 package com.E_commerce.demo.mapper;
 
-import com.E_commerce.demo.dto.ClienteRequest;
-import com.E_commerce.demo.dto.ClienteResponse;
+import com.E_commerce.demo.dto.request.ClienteRequest;
+import com.E_commerce.demo.dto.response.ClienteResponse;
 import com.E_commerce.demo.entity.Cliente;
 import org.springframework.stereotype.Component;
 

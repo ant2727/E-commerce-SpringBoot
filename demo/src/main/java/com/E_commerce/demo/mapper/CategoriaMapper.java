@@ -1,8 +1,8 @@
 package com.E_commerce.demo.mapper;
 
-import com.E_commerce.demo.dto.CategoriaRequest;
-import com.E_commerce.demo.dto.CategoriaResponse;
-import com.E_commerce.demo.dto.ProdutoResumoResponse;
+import com.E_commerce.demo.dto.request.CategoriaRequest;
+import com.E_commerce.demo.dto.response.CategoriaResponse;
+import com.E_commerce.demo.dto.response.ProdutoResumoResponse;
 import com.E_commerce.demo.entity.Categoria;
 import com.E_commerce.demo.entity.Produto;
 import org.springframework.stereotype.Component;

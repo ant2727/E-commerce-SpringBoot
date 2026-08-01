@@ -1,11 +1,17 @@
 package com.E_commerce.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "carrinho")
 public class Carrinho {
 
@@ -13,39 +19,15 @@ public class Carrinho {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "carrinho",
+    @Builder.Default
+    @OneToMany(
+            mappedBy = "carrinho",
             cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            orphanRemoval = true
+    )
     private List<ItemCarrinho> itens = new ArrayList<>();
-
-    public Carrinho() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public List<ItemCarrinho> getItens() {
-        return itens;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public void setItens(List<ItemCarrinho> itens) {
-        this.itens = itens;
-    }
 }

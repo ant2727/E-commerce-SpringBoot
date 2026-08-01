@@ -1,4 +1,4 @@
-package com.E_commerce.demo.dto;
+package com.E_commerce.demo.dto.response;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.E_commerce.demo.service;
 
-import com.E_commerce.demo.dto.ClienteRequest;
-import com.E_commerce.demo.dto.ClienteResponse;
+import com.E_commerce.demo.dto.request.ClienteRequest;
+import com.E_commerce.demo.dto.response.ClienteResponse;
 import com.E_commerce.demo.entity.Cliente;
 import com.E_commerce.demo.exception.ClienteNaoEncontradoException;
 import com.E_commerce.demo.mapper.ClienteMapper;

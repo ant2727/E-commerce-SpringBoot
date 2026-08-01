@@ -1,7 +1,7 @@
 package com.E_commerce.demo.controller;
 
-import com.E_commerce.demo.dto.CategoriaRequest;
-import com.E_commerce.demo.dto.CategoriaResponse;
+import com.E_commerce.demo.dto.request.CategoriaRequest;
+import com.E_commerce.demo.dto.response.CategoriaResponse;
 import com.E_commerce.demo.service.CategoriaService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;

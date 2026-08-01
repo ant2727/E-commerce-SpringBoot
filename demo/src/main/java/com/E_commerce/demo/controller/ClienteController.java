@@ -1,7 +1,7 @@
 package com.E_commerce.demo.controller;
 
-import com.E_commerce.demo.dto.ClienteRequest;
-import com.E_commerce.demo.dto.ClienteResponse;
+import com.E_commerce.demo.dto.request.ClienteRequest;
+import com.E_commerce.demo.dto.response.ClienteResponse;
 import com.E_commerce.demo.service.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
