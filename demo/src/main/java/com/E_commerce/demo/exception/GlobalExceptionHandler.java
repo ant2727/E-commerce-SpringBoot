@@ -65,4 +65,16 @@ public class GlobalExceptionHandler {
         );
 
     }
+
+    @ExceptionHandler(ClienteNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError tratarClienteNaoEncontrado(
+            ClienteNaoEncontradoException ex) {
+
+        return new ApiError(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                null
+        );
+    }
 }
