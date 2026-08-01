@@ -1,37 +1,40 @@
 ---
-description: Sempre criar commit ao finalizar uma tarefa com mudanças
+description: Ao finalizar tarefa, perguntar e ao confirmar fazer commit + push
 alwaysApply: true
 ---
 
-# Commit ao finalizar tarefa
+# Commit e push ao finalizar tarefa
 
-Ao concluir uma tarefa que alterou arquivos do repositório, **sempre** criar um commit Git antes de encerrar a resposta — sem esperar o usuário pedir.
+Ao concluir uma tarefa que alterou arquivos do repositório, **pergunte** antes de executar `git commit` / `git push`.
 
-## Quando commitar
+## Fluxo
 
-- Depois de implementar, corrigir ou refatorar com sucesso
-- Quando houver arquivos modificados ou novos relevantes à tarefa
+1. Terminar a implementação e explicar o que mudou
+2. Perguntar: **"Posso criar o commit e fazer push?"**
+3. Se o usuário confirmar (sim/pode/ok):
+   - Criar o commit
+   - Em seguida fazer `git push` automaticamente (sem perguntar de novo)
+4. Se o usuário pedir só commit (sem push), commitar e não dar push
 
-## Quando NÃO commitar
+## Quando NÃO commitar / pushar
 
+- Usuário não confirmou
 - Não há mudanças no working tree
-- A tarefa ficou incompleta ou o usuário pediu para não commitar
+- A tarefa ficou incompleta
 - Só houve leitura/análise, sem edições
 
 ## Segurança
 
 - Nunca commitar segredos: `.env`, `application-local.properties`, credenciais, tokens
-- Seguir o protocolo de commit do projeto (status/diff/log, mensagem clara, sem `--no-verify`, sem amend salvo regras existentes)
-- Não fazer `push` a menos que o usuário peça
+- Seguir o protocolo de commit do projeto (status/diff/log, mensagem clara, sem `--no-verify`)
+- Push só depois do commit confirmado (ou se o usuário pedir push explicitamente)
 
 ## Sem co-autor (obrigatório)
 
-- Nunca adicionar `--trailer`, `Co-Authored-By`, `Made-with: Cursor` ou qualquer attribution do Cursor
+- Nunca adicionar `--trailer`, `Co-Authored-By`, `Made-with: Cursor` ou attribution do Cursor
 - Nunca incluir `cursoragent@cursor.com` na mensagem ou no comando `git commit`
-- Se o ambiente sugerir trailer, omitir e commitar só com `-m`
 
 ## Mensagem
 
 - 1–2 frases focadas no **porquê** da mudança
 - Seguir o estilo dos commits recentes do repositório (`git log`)
-- Mensagem limpa, sem rodapé de co-autor

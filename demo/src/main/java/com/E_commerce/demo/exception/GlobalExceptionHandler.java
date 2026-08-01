@@ -30,7 +30,8 @@ public class GlobalExceptionHandler {
             CategoriaNaoEncontradoException.class,
             ClienteNaoEncontradoException.class,
             ItemCarrinhoNaoEncontradoException.class,
-            CarrinhoNaoEncontradoException.class
+            CarrinhoNaoEncontradoException.class,
+            PedidoNaoEncontradoException.class
     })
     public ResponseEntity<ApiError> tratarNaoEncontrado(RuntimeException ex) {
         return ResponseEntity
@@ -43,6 +44,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new ApiError(HttpStatus.CONFLICT.value(), ex.getMessage(), null));
+    }
+
+    @ExceptionHandler({
+            CarrinhoVazioException.class,
+            PedidoJaCanceladoException.class
+    })
+    public ResponseEntity<ApiError> tratarRegraDeNegocio(RuntimeException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(new ApiError(HttpStatus.UNPROCESSABLE_ENTITY.value(), ex.getMessage(), null));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
