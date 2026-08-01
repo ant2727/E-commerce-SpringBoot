@@ -1,0 +1,99 @@
+package com.E_commerce.demo.service;
+
+import com.E_commerce.demo.entity.Carrinho;
+import com.E_commerce.demo.entity.Cliente;
+import com.E_commerce.demo.entity.ItemCarrinho;
+import com.E_commerce.demo.entity.Produto;
+import com.E_commerce.demo.exception.ClienteNaoEncontradoException;
+import com.E_commerce.demo.exception.ProdutoNaoEncontradoException;
+import com.E_commerce.demo.exception.ProdutoSemEstoqueException;
+import com.E_commerce.demo.repository.CarrinhoRepository;
+import com.E_commerce.demo.repository.ClienteRepository;
+import com.E_commerce.demo.repository.ItemCarrinhoRepository;
+import com.E_commerce.demo.repository.ProdutoRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class CarrinhoService {
+
+    private final CarrinhoRepository carrinhoRepository;
+    private final ItemCarrinhoRepository itemRepository;
+    private final ClienteRepository clienteRepository;
+    private final ProdutoRepository produtoRepository;
+
+    private Carrinho buscarOuCriarCarrinho(Long clienteId) {
+
+        return carrinhoRepository.findByClienteId(clienteId)
+                .orElseGet(() -> {
+
+                    Cliente cliente = clienteRepository.findById(clienteId)
+                            .orElseThrow(() ->
+                                    new ClienteNaoEncontradoException(clienteId));
+
+                    Carrinho carrinho = Carrinho.builder()
+                            .cliente(cliente)
+                            .build();
+
+                    return carrinhoRepository.save(carrinho);
+
+                });
+
+    }
+
+    public void adicionarProduto(
+            Long clienteId,
+            Long produtoId,
+            Integer quantidade) {
+
+        Carrinho carrinho = buscarOuCriarCarrinho(clienteId);
+
+        Produto produto = produtoRepository.findById(produtoId)
+                .orElseThrow(() ->
+                        new ProdutoNaoEncontradoException(produtoId));
+
+        if (produto.getEstoque() < quantidade) {
+            throw new ProdutoSemEstoqueException(produtoId);
+        }
+
+        Optional<ItemCarrinho> itemExistente =
+                itemRepository.findByCarrinhoIdAndProdutoId(
+                        carrinho.getId(),
+                        produtoId
+                );
+
+        if (itemExistente.isPresent()) {
+
+            ItemCarrinho item = itemExistente.get();
+
+            int novaQuantidade =
+                    item.getQuantidade() + quantidade;
+
+            if (produto.getEstoque() < novaQuantidade) {
+                throw new ProdutoSemEstoqueException(produtoId);
+            }
+
+            item.adicionarQuantidade(quantidade);
+
+            itemRepository.save(item);
+
+            return;
+        }
+
+        ItemCarrinho novoItem = ItemCarrinho.builder()
+                .produto(produto)
+                .carrinho(carrinho)
+                .quantidade(quantidade)
+                .precoUnitario(produto.getPreco())
+                .build();
+
+        itemRepository.save(novoItem);
+
+
+    }
+}

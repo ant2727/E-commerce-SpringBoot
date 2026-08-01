@@ -32,4 +32,7 @@ public class ItemCarrinho {
     @JoinColumn(name = "carrinho_id", nullable = false)
     private Carrinho carrinho;
 
+    public void adicionarQuantidade(Integer quantidade) {
+        this.quantidade += quantidade;
+    }
 }

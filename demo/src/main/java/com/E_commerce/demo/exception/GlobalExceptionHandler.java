@@ -77,4 +77,16 @@ public class GlobalExceptionHandler {
                 null
         );
     }
+
+    @ExceptionHandler(ProdutoSemEstoqueException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError tratarProdutoSemEstoque(
+            ProdutoSemEstoqueException ex) {
+
+        return new ApiError(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                null
+        );
+}
 }
