@@ -9,13 +9,13 @@ import com.E_commerce.demo.repository.CarrinhoRepository;
 import com.E_commerce.demo.repository.ClienteRepository;
 import com.E_commerce.demo.repository.ItemCarrinhoRepository;
 import com.E_commerce.demo.repository.PedidoRepository;
+import com.E_commerce.demo.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -86,6 +86,7 @@ public class PedidoService {
     public PedidoResponse buscarPorId(Long id) {
         Pedido pedido = pedidoRepository.findByIdWithItens(id)
                 .orElseThrow(() -> new PedidoNaoEncontradoException(id));
+        garantirDonoOuAdmin(pedido);
         return pedidoMapper.toResponse(pedido);
     }
 
@@ -94,16 +95,21 @@ public class PedidoService {
         if (!clienteRepository.existsById(clienteId)) {
             throw new ClienteNaoEncontradoException(clienteId);
         }
+        if (!SecurityUtils.isAdmin()
+                && !SecurityUtils.getClienteIdLogado().equals(clienteId)) {
+            throw new AcessoNegadoException("Você só pode listar os próprios pedidos.");
+        }
         return pedidoMapper.toResponseList(
                 pedidoRepository.findByClienteIdWithItens(clienteId)
         );
     }
 
-
     @Transactional
     public PedidoResponse cancelar(Long id) {
         Pedido pedido = pedidoRepository.findByIdWithItens(id)
                 .orElseThrow(() -> new PedidoNaoEncontradoException(id));
+
+        garantirDonoOuAdmin(pedido);
 
         if (pedido.getStatus() == StatusPedido.CANCELADO) {
             throw new PedidoJaCanceladoException(id);
@@ -116,5 +122,14 @@ public class PedidoService {
 
         pedido.setStatus(StatusPedido.CANCELADO);
         return pedidoMapper.toResponse(pedido);
+    }
+
+    private void garantirDonoOuAdmin(Pedido pedido) {
+        if (SecurityUtils.isAdmin()) {
+            return;
+        }
+        if (!pedido.getCliente().getId().equals(SecurityUtils.getClienteIdLogado())) {
+            throw new AcessoNegadoException("Você só pode acessar os próprios pedidos.");
+        }
     }
 }

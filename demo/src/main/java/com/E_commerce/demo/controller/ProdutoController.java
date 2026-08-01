@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,6 +48,7 @@ public class ProdutoController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProdutoResponse> salvar(
             @Valid @RequestBody ProdutoRequest request) {
         return ResponseEntity
@@ -55,6 +57,7 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProdutoResponse> atualizar(
             @PathVariable Long id,
             @Valid @RequestBody ProdutoRequest request) {
@@ -62,12 +65,14 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         service.excluir(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/imagem")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProdutoResponse> uploadImagem(
             @PathVariable Long id,
             @RequestParam("arquivo") MultipartFile arquivo) throws IOException {

@@ -1,8 +1,0 @@
-# Copie este arquivo para application-local.properties e preencha os valores.
-# application-local.properties está no .gitignore e não deve ser commitado.
-
-spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce
-spring.datasource.username=root
-spring.datasource.password=sua_senha_aqui
-
-spring.jpa.show-sql=true

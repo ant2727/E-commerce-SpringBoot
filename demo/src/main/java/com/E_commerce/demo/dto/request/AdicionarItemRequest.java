@@ -11,9 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AdicionarItemRequest {
 
-    @NotNull(message = "O cliente é obrigatório.")
-    private Long clienteId;
-
     @NotNull(message = "O produto é obrigatório.")
     private Long produtoId;
 

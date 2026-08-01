@@ -3,6 +3,7 @@ package com.E_commerce.demo.controller;
 import com.E_commerce.demo.dto.request.AdicionarItemRequest;
 import com.E_commerce.demo.dto.request.AtualizarQuantidadeRequest;
 import com.E_commerce.demo.dto.response.CarrinhoResponse;
+import com.E_commerce.demo.security.SecurityUtils;
 import com.E_commerce.demo.service.CarrinhoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Carrinho do usuário logado.
+ * Não recebe mais clienteId: vem do JWT via SecurityUtils.
+ */
 @RestController
 @RequestMapping("/carrinhos")
 @RequiredArgsConstructor
@@ -21,8 +26,10 @@ public class CarrinhoController {
     public ResponseEntity<CarrinhoResponse> adicionarProduto(
             @Valid @RequestBody AdicionarItemRequest request) {
 
+        Long clienteId = SecurityUtils.getClienteIdLogado();
+
         CarrinhoResponse response = service.adicionarProduto(
-                request.getClienteId(),
+                clienteId,
                 request.getProdutoId(),
                 request.getQuantidade()
         );
@@ -30,35 +37,35 @@ public class CarrinhoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/{clienteId}")
-    public ResponseEntity<CarrinhoResponse> listarCarrinho(
-            @PathVariable Long clienteId) {
-
-        return ResponseEntity.ok(service.listarCarrinho(clienteId));
+    @GetMapping
+    public ResponseEntity<CarrinhoResponse> listarCarrinho() {
+        return ResponseEntity.ok(
+                service.listarCarrinho(SecurityUtils.getClienteIdLogado())
+        );
     }
 
-    @PutMapping("/{clienteId}/itens/{produtoId}")
+    @PutMapping("/itens/{produtoId}")
     public ResponseEntity<Void> atualizarQuantidade(
-            @PathVariable Long clienteId,
             @PathVariable Long produtoId,
             @Valid @RequestBody AtualizarQuantidadeRequest request) {
 
-        service.atualizarQuantidade(clienteId, produtoId, request.getQuantidade());
+        service.atualizarQuantidade(
+                SecurityUtils.getClienteIdLogado(),
+                produtoId,
+                request.getQuantidade()
+        );
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{clienteId}/itens/{produtoId}")
-    public ResponseEntity<Void> removerProduto(
-            @PathVariable Long clienteId,
-            @PathVariable Long produtoId) {
-
-        service.removerProduto(clienteId, produtoId);
+    @DeleteMapping("/itens/{produtoId}")
+    public ResponseEntity<Void> removerProduto(@PathVariable Long produtoId) {
+        service.removerProduto(SecurityUtils.getClienteIdLogado(), produtoId);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{clienteId}/itens")
-    public ResponseEntity<Void> limparCarrinho(@PathVariable Long clienteId) {
-        service.limparCarrinho(clienteId);
+    @DeleteMapping("/itens")
+    public ResponseEntity<Void> limparCarrinho() {
+        service.limparCarrinho(SecurityUtils.getClienteIdLogado());
         return ResponseEntity.noContent().build();
     }
 }

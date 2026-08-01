@@ -56,6 +56,20 @@ public class GlobalExceptionHandler {
                 .body(new ApiError(HttpStatus.UNPROCESSABLE_ENTITY.value(), ex.getMessage(), null));
     }
 
+    @ExceptionHandler(AcessoNegadoException.class)
+    public ResponseEntity<ApiError> tratarAcessoNegado(AcessoNegadoException ex) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new ApiError(HttpStatus.FORBIDDEN.value(), ex.getMessage(), null));
+    }
+
+    @ExceptionHandler(CredenciaisInvalidasException.class)
+    public ResponseEntity<ApiError> tratarCredenciaisInvalidas(CredenciaisInvalidasException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ApiError(HttpStatus.UNAUTHORIZED.value(), ex.getMessage(), null));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> tratarIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity

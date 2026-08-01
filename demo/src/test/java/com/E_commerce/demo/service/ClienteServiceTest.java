@@ -10,12 +10,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,6 +27,8 @@ class ClienteServiceTest {
     private ClienteRepository repository;
     @Mock
     private ClienteMapper mapper;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private ClienteService service;
@@ -35,6 +39,7 @@ class ClienteServiceTest {
         request.setNome("Ana");
         request.setEmail("ana@email.com");
         request.setTelefone("11999999999");
+        request.setSenha("senha123");
 
         Cliente entidade = new Cliente();
         entidade.setNome("Ana");
@@ -55,13 +60,15 @@ class ClienteServiceTest {
 
         when(repository.findByEmail("ana@email.com")).thenReturn(Optional.empty());
         when(mapper.toEntity(request)).thenReturn(entidade);
+        when(passwordEncoder.encode("senha123")).thenReturn("hash");
         when(repository.save(entidade)).thenReturn(salvo);
         when(mapper.toResponse(salvo)).thenReturn(response);
 
         ClienteResponse resultado = service.cadastrar(request);
 
         assertEquals(1L, resultado.getId());
-        assertEquals("ana@email.com", resultado.getEmail());
+        assertEquals("hash", entidade.getSenha());
+        verify(passwordEncoder).encode("senha123");
     }
 
     @Test
@@ -70,11 +77,13 @@ class ClienteServiceTest {
         request.setNome("Ana");
         request.setEmail("ana@email.com");
         request.setTelefone("11999999999");
+        request.setSenha("senha123");
 
         when(repository.findByEmail("ana@email.com"))
                 .thenReturn(Optional.of(new Cliente()));
 
         assertThrows(IllegalArgumentException.class, () -> service.cadastrar(request));
         verify(repository, never()).save(any());
+        verify(passwordEncoder, never()).encode(anyString());
     }
 }

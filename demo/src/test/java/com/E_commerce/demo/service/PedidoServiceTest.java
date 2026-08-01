@@ -2,6 +2,7 @@ package com.E_commerce.demo.service;
 
 import com.E_commerce.demo.dto.response.PedidoResponse;
 import com.E_commerce.demo.entity.*;
+import com.E_commerce.demo.enums.Role;
 import com.E_commerce.demo.enums.StatusPedido;
 import com.E_commerce.demo.exception.CarrinhoVazioException;
 import com.E_commerce.demo.exception.PedidoJaCanceladoException;
@@ -12,6 +13,8 @@ import com.E_commerce.demo.repository.CarrinhoRepository;
 import com.E_commerce.demo.repository.ClienteRepository;
 import com.E_commerce.demo.repository.ItemCarrinhoRepository;
 import com.E_commerce.demo.repository.PedidoRepository;
+import com.E_commerce.demo.security.ClienteUserDetails;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +22,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -57,6 +62,8 @@ class PedidoServiceTest {
         cliente.setNome("Ana");
         cliente.setEmail("ana@email.com");
         cliente.setTelefone("11999999999");
+        cliente.setSenha("hash");
+        cliente.setRole(Role.ROLE_CLIENTE);
 
         produto = new Produto();
         produto.setId(10L);
@@ -77,6 +84,20 @@ class PedidoServiceTest {
                 .itens(new ArrayList<>(List.of(item)))
                 .build();
         item.setCarrinho(carrinho);
+
+        ClienteUserDetails userDetails = new ClienteUserDetails(cliente);
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                )
+        );
+    }
+
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
     }
 
     @Test

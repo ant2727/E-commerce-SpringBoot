@@ -7,8 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,12 +18,9 @@ public class ClienteController {
 
     private final ClienteService service;
 
-    @PostMapping
-    public ResponseEntity<ClienteResponse> cadastrar(
-            @Valid @RequestBody ClienteRequest request) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(service.cadastrar(request));
+    @GetMapping("/me")
+    public ResponseEntity<ClienteResponse> me() {
+        return ResponseEntity.ok(service.me());
     }
 
     @GetMapping("/{id}")
@@ -32,6 +29,7 @@ public class ClienteController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<ClienteResponse>> listar(Pageable pageable) {
         return ResponseEntity.ok(service.listar(pageable));
     }
@@ -44,6 +42,7 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         service.excluir(id);
         return ResponseEntity.noContent().build();
